@@ -2,8 +2,8 @@
 title Factory Method - Matricula de Vehiculos
 
 skinparam classAttributeIconSize 0
-skinparam linetype ortho
-top to bottom direction
+skinparam nodesep 40
+skinparam ranksep 50
 
 abstract class Vehiculo <<Product>> {
   - placa: String
@@ -63,6 +63,12 @@ CreadorVehiculo ..> Vehiculo : <<use>>
 CreadorAuto ..> Auto : <<create>>
 CreadorCamioneta ..> Camioneta : <<create>>
 CreadorCamion ..> Camion : <<create>>
+
+' Distribución vertical: creadores y productos concretos en columnas
+CreadorAuto -[hidden]down- CreadorCamioneta
+CreadorCamioneta -[hidden]down- CreadorCamion
+Auto -[hidden]down- Camioneta
+Camioneta -[hidden]down- Camion
 
 @enduml
 
