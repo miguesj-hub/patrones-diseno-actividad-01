@@ -2,66 +2,91 @@ package activos.construccion;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
- * ConcreteBuilder: configura el activo paso a paso, valida los atributos obligatorios
- * y entrega el producto final.
+ * ConcreteBuilder: mantiene los datos en construcción, valida los atributos obligatorios
+ * y crea el producto final en obtenerActivo().
  */
 public class ConstructorActivoFijo implements ActivoFijoBuilder {
 
-    private ActivoFijo activo;
+    private String codigo;
+    private String nombre;
+    private BigDecimal precio;
+    private String tipo;
+    private String marca;
+    private String modelo;
+    private String numeroSerie;
+    private String ubicacion;
+    private String custodio;
+    private LocalDate fechaAdquisicion;
+    private Integer garantia;
+    private String proveedor;
+    private Map<String, String> caracteristicas = new LinkedHashMap<>();
+    private String observaciones;
 
     @Override
     public void iniciarConstruccion() {
-        activo = new ActivoFijo();
+        codigo = null;
+        nombre = null;
+        precio = null;
+        tipo = null;
+        marca = null;
+        modelo = null;
+        numeroSerie = null;
+        ubicacion = null;
+        custodio = null;
+        fechaAdquisicion = null;
+        garantia = null;
+        proveedor = null;
+        caracteristicas = new LinkedHashMap<>();
+        observaciones = null;
     }
 
     @Override
     public void establecerCodigo(String codigo) {
-        enConstruccion().setCodigoInstitucional(codigo);
+        this.codigo = codigo;
     }
 
     @Override
     public void establecerNombre(String nombre) {
-        enConstruccion().setNombreDescripcion(nombre);
+        this.nombre = nombre;
     }
 
     @Override
     public void establecerPrecio(BigDecimal precio) {
-        if (precio != null && precio.signum() <= 0) {
-            throw new IllegalArgumentException("El precio de adquisición debe ser mayor que cero");
-        }
-        enConstruccion().setPrecioAdquisicion(precio);
+        this.precio = precio;
     }
 
     @Override
     public void establecerTipo(String tipo) {
-        enConstruccion().setTipoActivo(tipo);
+        this.tipo = tipo;
     }
 
     @Override
     public void establecerMarca(String marca) {
-        enConstruccion().setMarca(marca);
+        this.marca = marca;
     }
 
     @Override
     public void establecerModelo(String modelo) {
-        enConstruccion().setModelo(modelo);
+        this.modelo = modelo;
     }
 
     @Override
     public void establecerNumeroSerie(String numero) {
-        enConstruccion().setNumeroSerie(numero);
+        this.numeroSerie = numero;
     }
 
     @Override
     public void establecerUbicacion(String ubicacion) {
-        enConstruccion().setUbicacion(ubicacion);
+        this.ubicacion = ubicacion;
     }
 
     @Override
     public void establecerCustodio(String custodio) {
-        enConstruccion().setCustodioResponsable(custodio);
+        this.custodio = custodio;
     }
 
     @Override
@@ -69,7 +94,7 @@ public class ConstructorActivoFijo implements ActivoFijoBuilder {
         if (fecha != null && fecha.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("La fecha de adquisición no puede ser futura");
         }
-        enConstruccion().setFechaAdquisicion(fecha);
+        this.fechaAdquisicion = fecha;
     }
 
     @Override
@@ -77,49 +102,46 @@ public class ConstructorActivoFijo implements ActivoFijoBuilder {
         if (meses != null && meses < 0) {
             throw new IllegalArgumentException("El período de garantía no puede ser negativo");
         }
-        enConstruccion().setPeriodoGarantia(meses);
+        this.garantia = meses;
     }
 
     @Override
     public void establecerProveedor(String proveedor) {
-        enConstruccion().setProveedor(proveedor);
+        this.proveedor = proveedor;
     }
 
     @Override
-    public void establecerCaracteristicas(String detalle) {
-        enConstruccion().setCaracteristicasTecnicas(detalle);
+    public void establecerCaracteristica(String clave, String valor) {
+        if (esVacio(clave)) {
+            throw new IllegalArgumentException("La clave de la característica no puede estar vacía");
+        }
+        caracteristicas.put(clave, valor);
     }
 
     @Override
     public void establecerObservaciones(String observaciones) {
-        enConstruccion().setObservaciones(observaciones);
+        this.observaciones = observaciones;
     }
 
     /**
-     * Valida los atributos obligatorios y entrega el activo. El builder queda libre
-     * para iniciar una nueva construcción.
+     * Valida los atributos obligatorios y crea el activo. Al terminar, el builder se
+     * reinicia para poder construir otro activo sin arrastrar datos del anterior.
      */
     @Override
     public ActivoFijo obtenerActivo() {
-        ActivoFijo resultado = enConstruccion();
-        if (esVacio(resultado.getCodigoInstitucional())) {
+        if (esVacio(codigo)) {
             throw new IllegalStateException("Falta el código institucional");
         }
-        if (esVacio(resultado.getNombreDescripcion())) {
+        if (esVacio(nombre)) {
             throw new IllegalStateException("Falta el nombre o descripción");
         }
-        if (resultado.getPrecioAdquisicion() == null) {
-            throw new IllegalStateException("Falta el precio de adquisición");
+        if (precio == null || precio.signum() <= 0) {
+            throw new IllegalStateException("Falta el precio de adquisición o no es mayor que cero");
         }
-        activo = null;
+        ActivoFijo resultado = new ActivoFijo(codigo, nombre, precio, tipo, marca, modelo, numeroSerie,
+                ubicacion, custodio, fechaAdquisicion, garantia, proveedor, caracteristicas, observaciones);
+        iniciarConstruccion();
         return resultado;
-    }
-
-    private ActivoFijo enConstruccion() {
-        if (activo == null) {
-            throw new IllegalStateException("Debe llamar a iniciarConstruccion() primero");
-        }
-        return activo;
     }
 
     private static boolean esVacio(String valor) {

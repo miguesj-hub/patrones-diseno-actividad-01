@@ -1,28 +1,25 @@
 package vehiculos.producto;
 
 /**
- * ConcreteProduct: su cálculo depende principalmente del tonelaje.
+ * ConcreteProduct: su cálculo depende del avalúo y del tonelaje.
  */
 public class Camion extends Vehiculo {
 
-    private static final double TASA_BASE = 120.0;
-    private static final double PORCENTAJE_AVALUO = 0.01;
-    private static final double VALOR_POR_TONELADA = 30.0;
+    private static final double PORCENTAJE_AVALUO = 0.04;
+    private static final double VALOR_POR_TONELADA = 50.0;
 
     private final double tonelaje;
 
     public Camion(String placa, String marca, String modelo, int anioFabricacion, double avaluo,
                   double tonelaje) {
         super(placa, marca, modelo, anioFabricacion, avaluo);
-        if (tonelaje <= 0) {
-            throw new IllegalArgumentException("El tonelaje debe ser mayor que cero");
-        }
+        validarNoNegativo(tonelaje, "El tonelaje");
         this.tonelaje = tonelaje;
     }
 
     @Override
     public double calcularMatricula() {
-        return TASA_BASE + getAvaluo() * PORCENTAJE_AVALUO + tonelaje * VALOR_POR_TONELADA;
+        return getAvaluo() * PORCENTAJE_AVALUO + tonelaje * VALOR_POR_TONELADA;
     }
 
     public double getTonelaje() {

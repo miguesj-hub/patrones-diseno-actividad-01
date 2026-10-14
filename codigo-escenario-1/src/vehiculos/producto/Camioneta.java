@@ -1,14 +1,13 @@
 package vehiculos.producto;
 
 /**
- * ConcreteProduct: además del avalúo y la antigüedad, incorpora su capacidad y uso.
+ * ConcreteProduct: además del avalúo, incorpora su capacidad y uso.
  */
 public class Camioneta extends Vehiculo {
 
-    private static final double TASA_BASE = 70.0;
-    private static final double PORCENTAJE_AVALUO = 0.02;
-    private static final double VALOR_POR_TONELADA = 15.0;
-    private static final double RECARGO_USO_COMERCIAL = 0.20;
+    private static final double PORCENTAJE_AVALUO = 0.03;
+    private static final double VALOR_POR_TONELADA = 20.0;
+    private static final double RECARGO_USO_COMERCIAL = 0.15;
 
     private final double capacidad;
     private final String uso;
@@ -16,8 +15,9 @@ public class Camioneta extends Vehiculo {
     public Camioneta(String placa, String marca, String modelo, int anioFabricacion, double avaluo,
                      double capacidad, String uso) {
         super(placa, marca, modelo, anioFabricacion, avaluo);
-        if (capacidad < 0) {
-            throw new IllegalArgumentException("La capacidad no puede ser negativa");
+        validarNoNegativo(capacidad, "La capacidad");
+        if (uso == null || uso.isBlank()) {
+            throw new IllegalArgumentException("El uso es obligatorio");
         }
         this.capacidad = capacidad;
         this.uso = uso;
@@ -25,10 +25,7 @@ public class Camioneta extends Vehiculo {
 
     @Override
     public double calcularMatricula() {
-        double factorAntiguedad = Math.max(0.5, 1 - 0.04 * getAntiguedad());
-        double valor = TASA_BASE
-                + getAvaluo() * PORCENTAJE_AVALUO * factorAntiguedad
-                + capacidad * VALOR_POR_TONELADA;
+        double valor = getAvaluo() * PORCENTAJE_AVALUO + capacidad * VALOR_POR_TONELADA;
         if ("comercial".equalsIgnoreCase(uso)) {
             valor *= 1 + RECARGO_USO_COMERCIAL;
         }

@@ -17,8 +17,13 @@ java -cp out activos.Main
 
 ## Decisiones de implementación
 
-- Tipos del UML: `Decimal` → `BigDecimal`, `Date` → `LocalDate`, `Integer` → `Integer` (admite ausencia de garantía).
-- `ActivoFijo` tiene constructor y setters con visibilidad de paquete: solo el builder puede configurarlo; el cliente solo lo consulta.
-- `DirectorActivoFijo.construirBase()` inicia la construcción y fija los atributos obligatorios; el cliente agrega los opcionales.
-- `obtenerActivo()` valida código, nombre y precio; si falta alguno lanza `IllegalStateException`. Tras entregar el activo, el builder queda vacío (multiplicidad 0..1) y debe reiniciarse.
-- Datos específicos que no tienen atributo propio (procesador, material, dimensiones) se registran en `caracteristicasTecnicas`.
+- Tipos del UML: `BigDecimal` para el precio, `LocalDate` para la fecha e `Integer` para la garantía (admite ausencia).
+- `ActivoFijo` es **inmutable**: campos `final`, constructor de paquete y sin setters. Solo el builder lo crea,
+  en `obtenerActivo()`, cuando los datos obligatorios están completos.
+- `ConstructorActivoFijo` guarda los datos en campos temporales; la relación con `ActivoFijo` es de dependencia (`<<create>>`).
+- `caracteristicasTecnicas` es un `Map<String, String>` (copiado y no modificable) cargado con `establecerCaracteristica(clave, valor)`;
+  así procesador, material o dimensiones no necesitan atributos propios.
+- `obtenerActivo()` valida código, nombre y precio mayor que cero; si falta alguno lanza `IllegalStateException`.
+  Al terminar, el builder se reinicia para construir otro activo.
+- `establecerGarantia` rechaza valores negativos y `establecerCaracteristica` rechaza claves vacías.
+- `DirectorActivoFijo.construirBase()` inicia la construcción y fija los obligatorios; el cliente agrega los opcionales.

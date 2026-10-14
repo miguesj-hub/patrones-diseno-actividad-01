@@ -17,9 +17,16 @@ java -cp out vehiculos.Main
 
 ## Reglas de cálculo (supuestas, el enunciado no las define)
 
-- **Auto:** 50 + avalúo × 1,5 % × factor de antigüedad (−5 % por año, mínimo 50 %).
-- **Camioneta:** (70 + avalúo × 2 % × factor de antigüedad (−4 % por año, mínimo 50 %) + capacidad × 15) × 1,20 si el uso es comercial.
-- **Camión:** 120 + avalúo × 1 % + tonelaje × 30.
+- **Auto:** 2 % del avalúo + 1 % por año de antigüedad (el recargo por antigüedad llega como máximo al 10 %).
+- **Camioneta:** 3 % del avalúo + 20 por tonelada de capacidad; +15 % si el uso es comercial.
+- **Camión:** 4 % del avalúo + 50 por tonelada.
+
+## Decisiones de implementación
+
+- `crearVehiculo(placa, marca, modelo, anioFabricacion, avaluo)` recibe los atributos comunes (según el UML).
+  Los datos propios de cada tipo (`capacidad`, `uso`, `tonelaje`) los conoce el creador concreto.
+- `Vehiculo` incluye `validarNoNegativo()` y `antiguedad()` (protegidos) y valida placa obligatoria y año ≥ 1900.
+- Los atributos son `final`: un vehículo no cambia tras su creación.
 
 ## Agregar un nuevo tipo (p. ej. Motocicleta)
 

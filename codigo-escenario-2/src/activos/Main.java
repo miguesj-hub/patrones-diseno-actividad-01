@@ -10,7 +10,7 @@ import activos.construccion.DirectorActivoFijo;
 
 /**
  * Cliente: el director establece la base obligatoria y el cliente agrega solo
- * los atributos opcionales que corresponden a cada activo.
+ * los atributos opcionales y las características técnicas que corresponden a cada activo.
  */
 public class Main {
 
@@ -26,7 +26,9 @@ public class Main {
         builder.establecerMarca("Dell");
         builder.establecerModelo("Latitude 5440");
         builder.establecerNumeroSerie("DL-5440-88213");
-        builder.establecerCaracteristicas("Procesador Intel Core i7, 16 GB RAM, 512 GB SSD");
+        builder.establecerCaracteristica("Procesador", "Intel Core i7");
+        builder.establecerCaracteristica("Memoria RAM", "16 GB");
+        builder.establecerCaracteristica("Almacenamiento", "512 GB SSD");
         builder.establecerGarantia(36);
         builder.establecerFechaAdquisicion(LocalDate.of(2026, 3, 15));
         builder.establecerProveedor("Tecnología Andina S.A.");
@@ -36,7 +38,8 @@ public class Main {
         // Mesa: solo material, dimensiones, ubicación y custodio.
         director.construirBase("AF002", "Mesa de reuniones", new BigDecimal("350.00"));
         builder.establecerTipo("Mueble");
-        builder.establecerCaracteristicas("Material: madera de roble; dimensiones: 2,40 x 1,10 m");
+        builder.establecerCaracteristica("Material", "Madera de roble");
+        builder.establecerCaracteristica("Dimensiones", "2,40 x 1,10 m");
         builder.establecerUbicacion("Cuenca - Sala de juntas 2");
         builder.establecerCustodio("Departamento Administrativo");
         ActivoFijo mesa = builder.obtenerActivo();

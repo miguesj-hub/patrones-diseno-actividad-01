@@ -4,31 +4,21 @@ import vehiculos.producto.Camioneta;
 import vehiculos.producto.Vehiculo;
 
 /**
- * ConcreteCreator: crea instancias de Camioneta con los datos proporcionados por el cliente.
+ * ConcreteCreator: crea instancias de Camioneta; conoce su capacidad y uso.
  */
 public class CreadorCamioneta extends CreadorVehiculo {
 
-    private final String placa;
-    private final String marca;
-    private final String modelo;
-    private final int anioFabricacion;
-    private final double avaluo;
     private final double capacidad;
     private final String uso;
 
-    public CreadorCamioneta(String placa, String marca, String modelo, int anioFabricacion, double avaluo,
-                            double capacidad, String uso) {
-        this.placa = placa;
-        this.marca = marca;
-        this.modelo = modelo;
-        this.anioFabricacion = anioFabricacion;
-        this.avaluo = avaluo;
+    public CreadorCamioneta(double capacidad, String uso) {
         this.capacidad = capacidad;
         this.uso = uso;
     }
 
     @Override
-    public Vehiculo crearVehiculo() {
+    public Vehiculo crearVehiculo(String placa, String marca, String modelo,
+                                  int anioFabricacion, double avaluo) {
         return new Camioneta(placa, marca, modelo, anioFabricacion, avaluo, capacidad, uso);
     }
 }

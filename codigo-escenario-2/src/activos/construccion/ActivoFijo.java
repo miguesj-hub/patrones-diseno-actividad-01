@@ -2,90 +2,52 @@ package activos.construccion;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringJoiner;
 
 /**
- * Product: activo fijo institucional. Solo puede ser configurado por el builder
- * (constructor y setters con visibilidad de paquete); el cliente únicamente lo consulta.
+ * Product: activo fijo institucional. Es inmutable: solo el builder (mismo paquete) puede
+ * crearlo, y únicamente cuando todos los datos obligatorios están completos.
  */
 public class ActivoFijo {
 
     // Obligatorios
-    private String codigoInstitucional;
-    private String nombreDescripcion;
-    private BigDecimal precioAdquisicion;
+    private final String codigoInstitucional;
+    private final String nombreDescripcion;
+    private final BigDecimal precioAdquisicion;
 
     // Opcionales
-    private String tipoActivo;
-    private String marca;
-    private String modelo;
-    private String numeroSerie;
-    private String ubicacion;
-    private String custodioResponsable;
-    private LocalDate fechaAdquisicion;
-    private Integer periodoGarantia;
-    private String proveedor;
-    private String caracteristicasTecnicas;
-    private String observaciones;
+    private final String tipoActivo;
+    private final String marca;
+    private final String modelo;
+    private final String numeroSerie;
+    private final String ubicacion;
+    private final String custodioResponsable;
+    private final LocalDate fechaAdquisicion;
+    private final Integer periodoGarantia;
+    private final String proveedor;
+    private final Map<String, String> caracteristicasTecnicas;
+    private final String observaciones;
 
-    ActivoFijo() {
-    }
-
-    void setCodigoInstitucional(String codigoInstitucional) {
+    ActivoFijo(String codigoInstitucional, String nombreDescripcion, BigDecimal precioAdquisicion,
+               String tipoActivo, String marca, String modelo, String numeroSerie, String ubicacion,
+               String custodioResponsable, LocalDate fechaAdquisicion, Integer periodoGarantia,
+               String proveedor, Map<String, String> caracteristicasTecnicas, String observaciones) {
         this.codigoInstitucional = codigoInstitucional;
-    }
-
-    void setNombreDescripcion(String nombreDescripcion) {
         this.nombreDescripcion = nombreDescripcion;
-    }
-
-    void setPrecioAdquisicion(BigDecimal precioAdquisicion) {
         this.precioAdquisicion = precioAdquisicion;
-    }
-
-    void setTipoActivo(String tipoActivo) {
         this.tipoActivo = tipoActivo;
-    }
-
-    void setMarca(String marca) {
         this.marca = marca;
-    }
-
-    void setModelo(String modelo) {
         this.modelo = modelo;
-    }
-
-    void setNumeroSerie(String numeroSerie) {
         this.numeroSerie = numeroSerie;
-    }
-
-    void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
-    }
-
-    void setCustodioResponsable(String custodioResponsable) {
         this.custodioResponsable = custodioResponsable;
-    }
-
-    void setFechaAdquisicion(LocalDate fechaAdquisicion) {
         this.fechaAdquisicion = fechaAdquisicion;
-    }
-
-    void setPeriodoGarantia(Integer periodoGarantia) {
         this.periodoGarantia = periodoGarantia;
-    }
-
-    void setProveedor(String proveedor) {
         this.proveedor = proveedor;
-    }
-
-    void setCaracteristicasTecnicas(String caracteristicasTecnicas) {
-        this.caracteristicasTecnicas = caracteristicasTecnicas;
-    }
-
-    void setObservaciones(String observaciones) {
+        this.caracteristicasTecnicas = Collections.unmodifiableMap(new LinkedHashMap<>(caracteristicasTecnicas));
         this.observaciones = observaciones;
     }
 
@@ -137,7 +99,8 @@ public class ActivoFijo {
         return proveedor;
     }
 
-    public String getCaracteristicasTecnicas() {
+    /** Vista no modificable de las características técnicas (clave → valor). */
+    public Map<String, String> getCaracteristicasTecnicas() {
         return caracteristicasTecnicas;
     }
 
@@ -161,7 +124,7 @@ public class ActivoFijo {
         datos.put("fecha de adquisición", fechaAdquisicion);
         datos.put("garantía (meses)", periodoGarantia);
         datos.put("proveedor", proveedor);
-        datos.put("características", caracteristicasTecnicas);
+        datos.put("características", caracteristicasTecnicas.isEmpty() ? null : caracteristicasTecnicas);
         datos.put("observaciones", observaciones);
 
         StringJoiner texto = new StringJoiner("\n  ", "ActivoFijo\n  ", "");

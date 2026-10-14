@@ -34,7 +34,7 @@ public interface ActivoFijoBuilder {
 
     void establecerProveedor(String proveedor);
 
-    void establecerCaracteristicas(String detalle);
+    void establecerCaracteristica(String clave, String valor);
 
     void establecerObservaciones(String observaciones);
 

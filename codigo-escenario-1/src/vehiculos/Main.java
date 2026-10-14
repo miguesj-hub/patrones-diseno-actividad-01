@@ -21,35 +21,37 @@ public class Main {
 
         System.out.println("=== Registro de vehículos y cálculo de matrícula ===");
         System.out.println("Tipo de vehículo: 1) Auto  2) Camioneta  3) Camión");
-        int tipo = leerEntero(entrada, "Opción: ");
 
-        CreadorVehiculo creador = seleccionarCreador(tipo, entrada);
-        Vehiculo vehiculo = creador.crearVehiculo();
-        registrar(vehiculo);
+        try {
+            int tipo = leerEntero(entrada, "Opción: ");
+            CreadorVehiculo creador = seleccionarCreador(tipo, entrada);
+            registrar(creador, entrada);
+        } catch (IllegalArgumentException e) {
+            System.out.println("No se pudo registrar el vehículo: " + e.getMessage());
+        }
     }
 
     private static CreadorVehiculo seleccionarCreador(int tipo, Scanner entrada) {
-        if (tipo < 1 || tipo > 3) {
-            throw new IllegalArgumentException("Tipo de vehículo no soportado: " + tipo);
-        }
+        return switch (tipo) {
+            case 1 -> new CreadorAuto();
+            case 2 -> new CreadorCamioneta(
+                    leerDecimal(entrada, "Capacidad (t): "),
+                    leerTexto(entrada, "Uso (particular/comercial): "));
+            case 3 -> new CreadorCamion(leerDecimal(entrada, "Tonelaje (t): "));
+            default -> throw new IllegalArgumentException("Tipo de vehículo no soportado: " + tipo);
+        };
+    }
+
+    /** Lógica principal: no depende de Auto, Camioneta ni Camion. */
+    private static void registrar(CreadorVehiculo creador, Scanner entrada) {
         String placa = leerTexto(entrada, "Placa: ");
         String marca = leerTexto(entrada, "Marca: ");
         String modelo = leerTexto(entrada, "Modelo: ");
         int anio = leerEntero(entrada, "Año de fabricación: ");
         double avaluo = leerDecimal(entrada, "Avalúo: ");
 
-        return switch (tipo) {
-            case 1 -> new CreadorAuto(placa, marca, modelo, anio, avaluo);
-            case 2 -> new CreadorCamioneta(placa, marca, modelo, anio, avaluo,
-                    leerDecimal(entrada, "Capacidad (t): "),
-                    leerTexto(entrada, "Uso (particular/comercial): "));
-            default -> new CreadorCamion(placa, marca, modelo, anio, avaluo,
-                    leerDecimal(entrada, "Tonelaje (t): "));
-        };
-    }
+        Vehiculo vehiculo = creador.crearVehiculo(placa, marca, modelo, anio, avaluo);
 
-    /** Lógica principal: no depende de Auto, Camioneta ni Camion. */
-    private static void registrar(Vehiculo vehiculo) {
         System.out.println();
         System.out.println("Vehículo registrado: " + vehiculo);
         System.out.printf("Valor de matrícula: $%.2f%n", vehiculo.calcularMatricula());

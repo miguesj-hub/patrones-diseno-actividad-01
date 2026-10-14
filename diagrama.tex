@@ -1,0 +1,169 @@
+@startuml
+title Factory Method - Matricula de Vehiculos
+
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+top to bottom direction
+
+abstract class Vehiculo <<Product>> {
+  - placa: String
+  - marca: String
+  - modelo: String
+  - anioFabricacion: int
+  - avaluo: double
+  {abstract} + calcularMatricula(): double
+}
+
+class Auto <<ConcreteProduct>> {
+  + calcularMatricula(): double
+}
+
+class Camioneta <<ConcreteProduct>> {
+  - capacidad: double
+  - uso: String
+  + calcularMatricula(): double
+}
+
+class Camion <<ConcreteProduct>> {
+  - tonelaje: double
+  + calcularMatricula(): double
+}
+
+abstract class CreadorVehiculo <<Creator>> {
+  {abstract} + crearVehiculo(placa: String, marca: String, modelo: String, anioFabricacion: int, avaluo: double): Vehiculo
+}
+
+class CreadorAuto <<ConcreteCreator>> {
+  + crearVehiculo(placa: String, marca: String, modelo: String, anioFabricacion: int, avaluo: double): Vehiculo
+}
+
+class CreadorCamioneta <<ConcreteCreator>> {
+  - capacidad: double
+  - uso: String
+  + CreadorCamioneta(capacidad: double, uso: String)
+  + crearVehiculo(placa: String, marca: String, modelo: String, anioFabricacion: int, avaluo: double): Vehiculo
+}
+
+class CreadorCamion <<ConcreteCreator>> {
+  - tonelaje: double
+  + CreadorCamion(tonelaje: double)
+  + crearVehiculo(placa: String, marca: String, modelo: String, anioFabricacion: int, avaluo: double): Vehiculo
+}
+
+Vehiculo <|-- Auto
+Vehiculo <|-- Camioneta
+Vehiculo <|-- Camion
+
+CreadorVehiculo <|-- CreadorAuto
+CreadorVehiculo <|-- CreadorCamioneta
+CreadorVehiculo <|-- CreadorCamion
+
+CreadorVehiculo ..> Vehiculo : <<use>>
+
+CreadorAuto ..> Auto : <<create>>
+CreadorCamioneta ..> Camioneta : <<create>>
+CreadorCamion ..> Camion : <<create>>
+
+@enduml
+
+
+@startuml
+title Registro de Activos Fijos - Builder Tradicional
+
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+left to right direction
+
+class ActivoFijo <<Product>> {
+  - codigoInstitucional: String
+  - nombreDescripcion: String
+  - precioAdquisicion: BigDecimal
+  - tipoActivo: String
+  - marca: String
+  - modelo: String
+  - numeroSerie: String
+  - ubicacion: String
+  - custodioResponsable: String
+  - fechaAdquisicion: LocalDate
+  - periodoGarantia: Integer
+  - proveedor: String
+  - caracteristicasTecnicas: Map<String, String>
+  - observaciones: String
+}
+
+interface ActivoFijoBuilder <<Builder>> {
+  + iniciarConstruccion(): void
+  + establecerCodigo(codigo: String): void
+  + establecerNombre(nombre: String): void
+  + establecerPrecio(precio: BigDecimal): void
+  + establecerTipo(tipo: String): void
+  + establecerMarca(marca: String): void
+  + establecerModelo(modelo: String): void
+  + establecerNumeroSerie(numero: String): void
+  + establecerUbicacion(ubicacion: String): void
+  + establecerCustodio(custodio: String): void
+  + establecerFechaAdquisicion(fecha: LocalDate): void
+  + establecerGarantia(meses: Integer): void
+  + establecerProveedor(proveedor: String): void
+  + establecerCaracteristica(clave: String, valor: String): void
+  + establecerObservaciones(observaciones: String): void
+  + obtenerActivo(): ActivoFijo
+}
+
+class ConstructorActivoFijo <<ConcreteBuilder>> {
+  - codigo: String
+  - nombre: String
+  - precio: BigDecimal
+  - tipo: String
+  - marca: String
+  - modelo: String
+  - numeroSerie: String
+  - ubicacion: String
+  - custodio: String
+  - fechaAdquisicion: LocalDate
+  - garantia: Integer
+  - proveedor: String
+  - caracteristicas: Map<String, String>
+  - observaciones: String
+  + iniciarConstruccion(): void
+  + establecerCodigo(codigo: String): void
+  + establecerNombre(nombre: String): void
+  + establecerPrecio(precio: BigDecimal): void
+  + establecerTipo(tipo: String): void
+  + establecerMarca(marca: String): void
+  + establecerModelo(modelo: String): void
+  + establecerNumeroSerie(numero: String): void
+  + establecerUbicacion(ubicacion: String): void
+  + establecerCustodio(custodio: String): void
+  + establecerFechaAdquisicion(fecha: LocalDate): void
+  + establecerGarantia(meses: Integer): void
+  + establecerProveedor(proveedor: String): void
+  + establecerCaracteristica(clave: String, valor: String): void
+  + establecerObservaciones(observaciones: String): void
+  + obtenerActivo(): ActivoFijo
+}
+
+class DirectorActivoFijo <<Director>> {
+  - builder: ActivoFijoBuilder
+  + DirectorActivoFijo(builder: ActivoFijoBuilder)
+  + construirBase(codigo: String, nombre: String, precio: BigDecimal): void
+}
+
+ConstructorActivoFijo ..|> ActivoFijoBuilder : implementa
+
+DirectorActivoFijo "*" --> "1" ActivoFijoBuilder : utiliza
+ConstructorActivoFijo "*" ..> "1" ActivoFijo : <<create>>
+
+note bottom of DirectorActivoFijo
+  Inicializa la construcción y
+  establece los atributos obligatorios.
+end note
+
+note bottom of ConstructorActivoFijo
+  Mantiene los datos en construcción.
+  Valida los obligatorios y crea
+  el producto final (obtenerActivo).
+end note
+
+@enduml
+

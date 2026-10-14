@@ -8,6 +8,8 @@ import java.time.Year;
  */
 public abstract class Vehiculo {
 
+    private static final int ANIO_MINIMO = 1900;
+
     private final String placa;
     private final String marca;
     private final String modelo;
@@ -15,12 +17,14 @@ public abstract class Vehiculo {
     private final double avaluo;
 
     protected Vehiculo(String placa, String marca, String modelo, int anioFabricacion, double avaluo) {
-        if (avaluo < 0) {
-            throw new IllegalArgumentException("El avalúo no puede ser negativo");
+        if (placa == null || placa.isBlank()) {
+            throw new IllegalArgumentException("La placa es obligatoria");
         }
-        if (anioFabricacion > Year.now().getValue()) {
-            throw new IllegalArgumentException("El año de fabricación no puede ser futuro");
+        if (anioFabricacion < ANIO_MINIMO || anioFabricacion > Year.now().getValue()) {
+            throw new IllegalArgumentException(
+                    "El año de fabricación debe estar entre " + ANIO_MINIMO + " y " + Year.now().getValue());
         }
+        validarNoNegativo(avaluo, "El avalúo");
         this.placa = placa;
         this.marca = marca;
         this.modelo = modelo;
@@ -30,8 +34,15 @@ public abstract class Vehiculo {
 
     public abstract double calcularMatricula();
 
+    /** Evita repetir en cada subclase la validación de valores no negativos. */
+    protected static void validarNoNegativo(double valor, String nombre) {
+        if (valor < 0) {
+            throw new IllegalArgumentException(nombre + " no puede ser negativo");
+        }
+    }
+
     /** Años transcurridos desde la fabricación; usado por las subclases en su cálculo. */
-    protected int getAntiguedad() {
+    protected int antiguedad() {
         return Year.now().getValue() - anioFabricacion;
     }
 

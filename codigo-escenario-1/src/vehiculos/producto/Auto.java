@@ -5,8 +5,9 @@ package vehiculos.producto;
  */
 public class Auto extends Vehiculo {
 
-    private static final double TASA_BASE = 50.0;
-    private static final double PORCENTAJE_AVALUO = 0.015;
+    private static final double PORCENTAJE_AVALUO = 0.02;
+    private static final double PORCENTAJE_POR_ANIO = 0.01;
+    private static final double PORCENTAJE_MAXIMO_ANTIGUEDAD = 0.10;
 
     public Auto(String placa, String marca, String modelo, int anioFabricacion, double avaluo) {
         super(placa, marca, modelo, anioFabricacion, avaluo);
@@ -14,8 +15,8 @@ public class Auto extends Vehiculo {
 
     @Override
     public double calcularMatricula() {
-        // Descuento del 5 % por año de antigüedad, hasta un máximo del 50 %.
-        double factorAntiguedad = Math.max(0.5, 1 - 0.05 * getAntiguedad());
-        return TASA_BASE + getAvaluo() * PORCENTAJE_AVALUO * factorAntiguedad;
+        // 2 % del avalúo + 1 % por año de antigüedad (el recargo por antigüedad llega como máximo al 10 %).
+        double porcentajeAntiguedad = Math.min(PORCENTAJE_MAXIMO_ANTIGUEDAD, PORCENTAJE_POR_ANIO * antiguedad());
+        return getAvaluo() * (PORCENTAJE_AVALUO + porcentajeAntiguedad);
     }
 }
