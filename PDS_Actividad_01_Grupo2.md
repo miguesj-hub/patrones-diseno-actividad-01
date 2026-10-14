@@ -59,7 +59,11 @@ Tendremos que añadir a los cuatro principales participantes del factory method:
 
 ![](image/escenario1_imagen1.png)
 
+*Ilustración 1. Diagrama Factory Method inicial*
+
 ![](image/escenario1_imagen2.png)
+
+*Ilustración 2. Diagrama Factory Method Final*
 
 4.  Código fuente
 
@@ -213,7 +217,11 @@ Tenemos que manejar las siguientes clases principales para diseñar según el pa
 
 ![](image/escenario2_imagen1.png)
 
+*Ilustración 3. Diagrama Builder inicial*
+
 ![](image/escenario2_imagen2.png)
+
+*Ilustración 4. Diagrama Builder Final*
 
 4.  Código fuente
 
@@ -308,3 +316,5 @@ En el segundo escenario, Builder fue más adecuado porque existían atributos ob
 
 La IA sirvió como apoyo para obtener una primera propuesta, pero varias decisiones tuvieron que ser revisadas y ajustadas según el enunciado. Por ejemplo, se mantuvo Vehiculo como clase abstracta y una sola clase ActivoFijo, mientras que se modificaron aspectos como los parámetros de crearVehiculo() y las características técnicas.
 Durante la implementación también se ajustó el UML para que coincida con el código. En general, ambos patrones agregan más clases, pero permiten tener una solución más clara, organizada y mantenible.
+
+Código fuente: <https://github.com/miguesj-hub/patrones-diseno-actividad-01>
